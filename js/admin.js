@@ -22,6 +22,7 @@ function showAdmin() {
   loadOrders();
   loadEvents();
   loadRaffles();
+  loadProductsAdmin();
 }
 
 document.getElementById("login-form").addEventListener("submit", async (e) => {
@@ -145,7 +146,11 @@ async function loadRaffles() {
       .from("raffle_entries").select("*").eq("raffle_id", raffle.id).order("created_at", { ascending: false });
 
     html += `<div class="card" style="margin-bottom:28px;"><div class="card-body">
-      <h3>${raffle.title} ${raffle.active ? '<span class="status-pill">פעילה</span>' : '<span class="status-pill">סגורה</span>'}</h3>
+      <h3>${raffle.title} ${raffle.active ? '<span class="status-pill">פעילה</span>' : '<span class="status-pill">סגורה</span>'}
+        <button class="btn btn-secondary toggle-raffle-btn" data-id="${raffle.id}" data-active="${raffle.active}" style="padding:4px 12px; font-size:0.8rem; margin-right:10px;">
+          ${raffle.active ? "סגור הגרלה" : "פתח הגרלה"}
+        </button>
+      </h3>
       <p>נרשמים: ${entries ? entries.length : 0}${raffle.winner_entry_id ? " · יש זוכה נבחר" : ""}</p>
       <table class="data-table"><thead><tr><th>תאריך</th><th>שם</th><th>טלפון</th><th>אימייל</th><th></th></tr></thead>
       <tbody>
@@ -169,4 +174,34 @@ async function loadRaffles() {
       loadRaffles();
     });
   });
+
+  el.querySelectorAll(".toggle-raffle-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const isActive = btn.dataset.active === "true";
+      await supabaseClient.from("raffles").update({ active: !isActive }).eq("id", btn.dataset.id);
+      loadRaffles();
+    });
+  });
+}
+
+// ---------- מוצרים (תצוגה בלבד) ----------
+async function loadProductsAdmin() {
+  const el = document.getElementById("products-table");
+  const { data, error } = await supabaseClient.from("products").select("*").order("sort_order", { ascending: true });
+  if (error) { el.innerHTML = `<div class="empty-state">שגיאה בטעינה: ${error.message}</div>`; return; }
+  if (!data.length) { el.innerHTML = `<div class="empty-state">אין מוצרים עדיין.</div>`; return; }
+
+  el.innerHTML = `<table class="data-table"><thead><tr>
+    <th>תמונה</th><th>שם</th><th>מחיר</th><th>תיאור</th><th>slug</th>
+  </tr></thead><tbody>
+    ${data.map(p => `
+      <tr>
+        <td><img src="${p.image_url || ''}" alt="${p.name}" style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid var(--line);"></td>
+        <td>${p.name}</td>
+        <td>₪${p.price}</td>
+        <td style="max-width:280px;">${p.description}</td>
+        <td>${p.slug}</td>
+      </tr>
+    `).join("")}
+  </tbody></table>`;
 }
