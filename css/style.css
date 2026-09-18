@@ -7,15 +7,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Assistant:wght@400;500;600;700&display=swap');
 
 :root {
-  --cream:      #FBF3E2;
-  --paper:      #FFFDF8;
-  --teal:       #1B4B4A;
-  --teal-dark:  #123433;
-  --mustard:    #E8A33D;
-  --coral:      #D64545;
-  --ink:        #241C15;
-  --ink-soft:   #4A4038;
-  --line:       #E4D9C2;
+  --cream:      #FFF8E7;
+  --paper:      #FFFFFF;
+  --teal:       #1E8FC4;   /* כחול שמיים אנרגטי */
+  --teal-dark:  #0F5E85;
+  --mustard:    #FFC93C;   /* צהוב שמש */
+  --coral:      #FF5A5F;
+  --grass:      #3CB878;
+  --ink:        #22252B;
+  --ink-soft:   #55545a;
+  --line:       #F0DFA8;
 
   --font-display: 'Baloo 2', 'Segoe UI', sans-serif;
   --font-body: 'Assistant', 'Segoe UI', sans-serif;
