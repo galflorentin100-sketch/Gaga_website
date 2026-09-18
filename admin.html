@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A6%86%3C/text%3E%3C/svg%3E">
 <title>מערכת ניהול | געגע בקרקס המשוגע</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -38,6 +39,7 @@
     <button class="tab-btn active" data-tab="orders">הזמנות חנות</button>
     <button class="tab-btn" data-tab="events">פניות הופעות</button>
     <button class="tab-btn" data-tab="raffles">הגרלות ונרשמים</button>
+    <button class="tab-btn" data-tab="products">מוצרים</button>
     <button id="logout-btn" style="margin-top:24px; color:#F3B3B3;">התנתקות</button>
   </aside>
   <main class="admin-main">
@@ -52,6 +54,11 @@
     <section id="tab-raffles" class="tab-panel" style="display:none;">
       <h2>הגרלות ונרשמים</h2>
       <div id="raffles-table"><div class="empty-state">טוען...</div></div>
+    </section>
+    <section id="tab-products" class="tab-panel" style="display:none;">
+      <h2>מוצרים בחנות</h2>
+      <p class="form-note">לעריכת מוצרים (מחיר, תיאור, תמונה) - יש לערוך ישירות בטבלת <code>products</code> ב-Supabase Table Editor.</p>
+      <div id="products-table"><div class="empty-state">טוען...</div></div>
     </section>
   </main>
 </div>
