@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הופעות וימי הולדת | געגע בקרקס המשוגע</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand"><span class="duck">🦆</span> געגע בקרקס המשוגע</a>
+    <button class="nav-toggle" aria-label="פתח תפריט">☰</button>
+    <nav class="main-nav">
+      <a href="index.html">בית</a>
+      <a href="about.html">אודות</a>
+      <a href="store.html">חנות</a>
+      <a href="events.html" aria-current="page">הופעות וימי הולדת</a>
+      <a href="raffle.html">הגרלות</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:64px 0 90px;">
+  <div class="container">
+    <span class="eyebrow-badge">הזמנת מופע</span>
+    <h1>מזמינים את געגע אליכם</h1>
+    <p class="lede">למלאו את הפרטים ונחזור אליכם בוואטסאפ לתיאום מלא.</p>
+  </div>
+  <div class="hero-bunting"></div>
+</section>
+
+<section>
+  <div class="container">
+    <form id="event-form">
+      <div class="field">
+        <label>סוג הפנייה</label>
+        <div class="radio-group">
+          <label><input type="radio" name="request_type" value="performance" checked> הופעה (גן / אירוע)</label>
+          <label><input type="radio" name="request_type" value="birthday"> יום הולדת</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="full_name">שם מלא</label>
+        <input type="text" id="full_name" name="full_name" required>
+      </div>
+      <div class="field">
+        <label for="phone">טלפון</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+      <div class="field">
+        <label for="email">אימייל</label>
+        <input type="email" id="email" name="email">
+      </div>
+      <div class="field">
+        <label for="city">עיר</label>
+        <input type="text" id="city" name="city">
+      </div>
+      <div class="field">
+        <label for="event_date">תאריך מבוקש</label>
+        <input type="date" id="event_date" name="event_date">
+      </div>
+      <div class="field">
+        <label for="kid_age">גיל החוגג/ת (אם רלוונטי)</label>
+        <input type="text" id="kid_age" name="kid_age">
+      </div>
+      <div class="field">
+        <label for="details">פרטים נוספים</label>
+        <textarea id="details" name="details" placeholder="מספר ילדים, מיקום, שעות מועדפות..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">שליחת פנייה</button>
+      <div class="form-message" id="event-msg"></div>
+    </form>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="brand" style="color:var(--cream);">🦆 געגע בקרקס המשוגע</div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/common.js"></script>
+<script>
+document.getElementById("event-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector("button[type=submit]");
+  const msg = document.getElementById("event-msg");
+  btn.disabled = true;
+
+  const payload = {
+    request_type: form.request_type.value,
+    full_name: form.full_name.value,
+    phone: form.phone.value,
+    email: form.email.value,
+    city: form.city.value,
+    event_date: form.event_date.value || null,
+    kid_age: form.kid_age.value,
+    details: form.details.value
+  };
+
+  const { error } = await supabaseClient.from("event_requests").insert(payload);
+
+  if (error) {
+    showFormMessage(msg, "error", "משהו השתבש, נסו שוב.");
+    console.error(error);
+    btn.disabled = false;
+    return;
+  }
+
+  const typeLabel = payload.request_type === "birthday" ? "יום הולדת" : "הופעה";
+  const waText = `שלום! שלחתי פנייה להזמנת ${typeLabel} של געגע.\nשם: ${payload.full_name}\nעיר: ${payload.city}\nתאריך מבוקש: ${payload.event_date || "-"}`;
+
+  msg.innerHTML = `הפנייה נשמרה בהצלחה! <a href="${buildWhatsAppLink(waText)}" target="_blank" style="text-decoration:underline; font-weight:700;">המשיכו לוואטסאפ לתיאום מהיר &larr;</a>`;
+  msg.className = "form-message show success";
+  form.reset();
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

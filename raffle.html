@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הגרלות | געגע בקרקס המשוגע</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand"><span class="duck">🦆</span> געגע בקרקס המשוגע</a>
+    <button class="nav-toggle" aria-label="פתח תפריט">☰</button>
+    <nav class="main-nav">
+      <a href="index.html">בית</a>
+      <a href="about.html">אודות</a>
+      <a href="store.html">חנות</a>
+      <a href="events.html">הופעות וימי הולדת</a>
+      <a href="raffle.html" aria-current="page">הגרלות</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:64px 0 90px;">
+  <div class="container">
+    <span class="eyebrow-badge">הגרלה פעילה</span>
+    <h1>הרשמה להגרלה של געגע</h1>
+    <p class="lede">ההרשמה חינמית וקצרה. הזוכה ייבחר על ידי צוות געגע ויקבל הודעה אישית.</p>
+  </div>
+  <div class="hero-bunting"></div>
+</section>
+
+<section>
+  <div class="container" id="raffle-wrap">
+    <div class="empty-state">טוען הגרלות...</div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="brand" style="color:var(--cream);">🦆 געגע בקרקס המשוגע</div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/common.js"></script>
+<script>
+const wrap = document.getElementById("raffle-wrap");
+
+async function loadRaffles() {
+  const { data, error } = await supabaseClient
+    .from("raffles").select("*").eq("active", true).order("created_at", { ascending: false });
+
+  if (error) {
+    wrap.innerHTML = `<div class="empty-state">לא הצלחנו לטעון הגרלות כרגע.</div>`;
+    console.error(error);
+    return;
+  }
+  if (!data || data.length === 0) {
+    wrap.innerHTML = `<div class="empty-state">אין כרגע הגרלות פעילות. חזרו בקרוב!</div>`;
+    return;
+  }
+
+  wrap.innerHTML = data.map(r => `
+    <div class="grid raffle-layout" style="grid-template-columns: 1fr 1fr; align-items:start; margin-bottom:48px;">
+      <div class="card" style="margin:0;">
+        <div class="card-media"><img src="${r.image_url || ''}" alt="${r.title}"></div>
+        <div class="card-body">
+          <h3>${r.title}</h3>
+          <p>${r.description || ""}</p>
+        </div>
+      </div>
+      <div>
+        <form class="raffle-form" data-raffle-id="${r.id}">
+          <div class="field">
+            <label for="full_name-${r.id}">שם מלא</label>
+            <input type="text" id="full_name-${r.id}" name="full_name" required>
+          </div>
+          <div class="field">
+            <label for="phone-${r.id}">טלפון</label>
+            <input type="tel" id="phone-${r.id}" name="phone" required>
+          </div>
+          <div class="field">
+            <label for="email-${r.id}">אימייל</label>
+            <input type="email" id="email-${r.id}" name="email">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">הרשמה להגרלה</button>
+          <div class="form-message" id="raffle-msg-${r.id}"></div>
+        </form>
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".raffle-form").forEach(form => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const raffleId = form.dataset.raffleId;
+      const btn = form.querySelector("button[type=submit]");
+      const msg = document.getElementById(`raffle-msg-${raffleId}`);
+      btn.disabled = true;
+
+      const { error } = await supabaseClient.from("raffle_entries").insert({
+        raffle_id: raffleId,
+        full_name: form.full_name.value,
+        phone: form.phone.value,
+        email: form.email.value
+      });
+
+      if (error) {
+        showFormMessage(msg, "error", "משהו השתבש, נסו שוב.");
+        console.error(error);
+        btn.disabled = false;
+        return;
+      }
+      showFormMessage(msg, "success", "נרשמתם בהצלחה להגרלה! בהצלחה 🍀");
+      form.reset();
+      btn.disabled = false;
+    });
+  });
+}
+loadRaffles();
+</script>
+<style>@media (max-width:760px){#raffle-wrap .grid{grid-template-columns:1fr !important;}}</style>
+</body>
+</html>

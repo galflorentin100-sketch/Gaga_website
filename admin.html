@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת ניהול | געגע בקרקס המשוגע</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- מסך התחברות -->
+<div id="login-screen">
+  <header class="site-header"><div class="container">
+    <a href="index.html" class="brand"><span class="duck">🦆</span> געגע בקרקס המשוגע</a>
+  </div></header>
+  <div class="login-box">
+    <h2>כניסת מנהל</h2>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-email">אימייל</label>
+        <input type="email" id="login-email" required>
+      </div>
+      <div class="field">
+        <label for="login-password">סיסמה</label>
+        <input type="password" id="login-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">התחברות</button>
+      <div class="form-message" id="login-msg"></div>
+    </form>
+    <p class="form-note" style="margin-top:16px;">משתמש המנהל נוצר ב-Supabase Dashboard תחת Authentication → Users.</p>
+  </div>
+</div>
+
+<!-- לוח ניהול -->
+<div id="admin-screen" class="admin-shell" style="display:none;">
+  <aside class="admin-sidebar">
+    <h2>🦆 ניהול געגע</h2>
+    <button class="tab-btn active" data-tab="orders">הזמנות חנות</button>
+    <button class="tab-btn" data-tab="events">פניות הופעות</button>
+    <button class="tab-btn" data-tab="raffles">הגרלות ונרשמים</button>
+    <button id="logout-btn" style="margin-top:24px; color:#F3B3B3;">התנתקות</button>
+  </aside>
+  <main class="admin-main">
+    <section id="tab-orders" class="tab-panel">
+      <h2>הזמנות מהחנות</h2>
+      <div id="orders-table"><div class="empty-state">טוען...</div></div>
+    </section>
+    <section id="tab-events" class="tab-panel" style="display:none;">
+      <h2>פניות הופעות וימי הולדת</h2>
+      <div id="events-table"><div class="empty-state">טוען...</div></div>
+    </section>
+    <section id="tab-raffles" class="tab-panel" style="display:none;">
+      <h2>הגרלות ונרשמים</h2>
+      <div id="raffles-table"><div class="empty-state">טוען...</div></div>
+    </section>
+  </main>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/common.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

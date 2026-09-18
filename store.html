@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חנות | געגע בקרקס המשוגע</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand"><span class="duck">🦆</span> געגע בקרקס המשוגע</a>
+    <button class="nav-toggle" aria-label="פתח תפריט">☰</button>
+    <nav class="main-nav">
+      <a href="index.html">בית</a>
+      <a href="about.html">אודות</a>
+      <a href="store.html" aria-current="page">חנות</a>
+      <a href="events.html">הופעות וימי הולדת</a>
+      <a href="raffle.html">הגרלות</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:64px 0 90px;">
+  <div class="container">
+    <span class="eyebrow-badge">חנות רשמית</span>
+    <h1>המוצרים של געגע</h1>
+    <p class="lede">רכישה ללא סליקה אמיתית - זהו אתר להדגמה. הפרטים שלכם יישמרו במערכת ונחזור אליכם.</p>
+  </div>
+  <div class="hero-bunting"></div>
+</section>
+
+<section>
+  <div class="container">
+    <div id="products-grid" class="grid">
+      <div class="empty-state">טוען מוצרים...</div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="brand" style="color:var(--cream);">🦆 געגע בקרקס המשוגע</div>
+    <p><a href="events.html">הזמנת הופעה</a> · <a href="raffle.html">הגרלות</a></p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/common.js"></script>
+<script>
+async function loadProducts() {
+  const grid = document.getElementById("products-grid");
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    grid.innerHTML = `<div class="empty-state">לא הצלחנו לטעון את המוצרים כרגע. ודאו שהגדרתם את פרטי החיבור ב-js/config.js.</div>`;
+    console.error(error);
+    return;
+  }
+  if (!data || data.length === 0) {
+    grid.innerHTML = `<div class="empty-state">עדיין אין מוצרים בחנות.</div>`;
+    return;
+  }
+
+  grid.innerHTML = data.map(p => `
+    <a href="product.html?slug=${encodeURIComponent(p.slug)}" class="card">
+      <div class="card-media"><img src="${p.image_url || ''}" alt="${p.name}"></div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <span class="price-tag">₪${p.price}</span>
+      </div>
+    </a>
+  `).join("");
+}
+loadProducts();
+</script>
+</body>
+</html>
