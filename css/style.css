@@ -38,6 +38,9 @@ html {
 body {
   margin: 0;
   background: var(--cream);
+  background-image:
+    radial-gradient(circle at 2px 2px, rgba(34,37,43,0.06) 1.5px, transparent 0);
+  background-size: 26px 26px;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 17px;
@@ -106,6 +109,12 @@ p { margin: 0 0 1em 0; max-width: 62ch; }
   justify-content: center;
   font-size: 1.4rem;
   border: 2.5px solid var(--ink);
+  animation: bob 2.6s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-6deg); }
 }
 
 nav.main-nav {
@@ -169,7 +178,19 @@ nav.main-nav a[aria-current="page"] {
   background: var(--paper);
   color: var(--ink);
   transition: transform 0.12s ease;
+  position: relative;
+  overflow: hidden;
 }
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+.btn:hover::after { left: 130%; }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 
@@ -199,6 +220,42 @@ nav.main-nav a[aria-current="page"] {
   height: 34px;
   background:
     radial-gradient(circle at 10px 0, transparent 12px, var(--cream) 13px) 0 0/24px 24px repeat-x;
+}
+
+/* ---------- Circus marquee title (neon poster style) ---------- */
+.marquee-lights {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.marquee-lights span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--mustard);
+  box-shadow: 0 0 8px 2px rgba(255,201,60,0.8);
+  animation: blink 1.4s ease-in-out infinite;
+}
+.marquee-lights span:nth-child(3n+1) { background: var(--coral); box-shadow: 0 0 8px 2px rgba(255,90,95,0.8); animation-delay: 0.2s; }
+.marquee-lights span:nth-child(3n+2) { background: var(--grass); box-shadow: 0 0 8px 2px rgba(60,184,120,0.8); animation-delay: 0.4s; }
+@keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
+
+.circus-title {
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.15;
+}
+.circus-title .ct-line1,
+.circus-title .ct-line2 {
+  display: inline-block;
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+}
+.circus-title .ct-line1 {
+  color: var(--mustard);
+  text-shadow: 3px 3px 0 var(--coral), 6px 6px 0 var(--ink), 0 0 30px rgba(255,201,60,0.55);
+}
+.circus-title .ct-line2 {
+  color: var(--paper);
+  text-shadow: 3px 3px 0 var(--teal-dark), 6px 6px 0 var(--ink), 0 0 30px rgba(255,255,255,0.4);
 }
 
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
@@ -235,6 +292,12 @@ section.alt { background: var(--paper); }
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+a.card:hover, .card.hoverable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 11px 0 var(--line);
 }
 
 .card-media {
@@ -367,6 +430,47 @@ table.data-table select { padding: 6px 8px; font-size: 0.9rem; }
 }
 
 .empty-state { padding: 30px; text-align: center; color: var(--ink-soft); }
+
+/* ---------- Floating CTA ---------- */
+.floating-cta {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 100;
+  background: var(--coral);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 14px 22px;
+  border-radius: 999px;
+  border: 2.5px solid var(--ink);
+  box-shadow: 0 5px 0 var(--ink);
+  transition: transform 0.15s ease;
+}
+.floating-cta:hover { transform: translateY(-3px); }
+.floating-cta:active { transform: translateY(0); box-shadow: 0 2px 0 var(--ink); }
+
+@media (max-width: 480px) {
+  .floating-cta { font-size: 0.9rem; padding: 12px 18px; left: 12px; bottom: 12px; }
+}
+
+/* ---------- Confetti ---------- */
+.confetti-piece {
+  position: fixed;
+  top: -12px;
+  width: 10px;
+  height: 14px;
+  z-index: 300;
+  pointer-events: none;
+  border-radius: 2px;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(600deg); opacity: 0.9; }
+}
 
 @media (max-width: 760px) {
   .admin-shell { flex-direction: column; }
