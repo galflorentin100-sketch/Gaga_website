@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A6%86%3C/text%3E%3C/svg%3E">
 <title>חנות | געגע בקרקס המשוגע</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -59,7 +60,7 @@ async function loadProducts() {
     .order("sort_order", { ascending: true });
 
   if (error) {
-    grid.innerHTML = `<div class="empty-state">לא הצלחנו לטעון את המוצרים כרגע. ודאו שהגדרתם את פרטי החיבור ב-js/config.js.</div>`;
+    grid.innerHTML = `<div class="empty-state">שגיאה בטעינת המוצרים:<br><code style="direction:ltr; display:inline-block; margin-top:8px; font-size:0.85rem;">${error.message || JSON.stringify(error)}</code></div>`;
     console.error(error);
     return;
   }
