@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A6%86%3C/text%3E%3C/svg%3E">
 <title>הגרלות | געגע בקרקס המשוגע</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -25,7 +26,8 @@
 <section class="hero" style="padding:64px 0 90px;">
   <div class="container">
     <span class="eyebrow-badge">הגרלה פעילה</span>
-    <h1>הרשמה להגרלה של געגע</h1>
+    <div class="marquee-lights"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <h1 class="circus-title"><span class="ct-line1">הרשמה להגרלה של געגע</span></h1>
     <p class="lede">ההרשמה חינמית וקצרה. הזוכה ייבחר על ידי צוות געגע ויקבל הודעה אישית.</p>
   </div>
   <div class="hero-bunting"></div>
@@ -116,6 +118,7 @@ async function loadRaffles() {
         return;
       }
       showFormMessage(msg, "success", "נרשמתם בהצלחה להגרלה! בהצלחה 🍀");
+      confettiBurst();
       form.reset();
       btn.disabled = false;
     });
