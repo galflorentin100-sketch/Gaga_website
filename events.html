@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A6%86%3C/text%3E%3C/svg%3E">
 <title>הופעות וימי הולדת | געגע בקרקס המשוגע</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -25,7 +26,8 @@
 <section class="hero" style="padding:64px 0 90px;">
   <div class="container">
     <span class="eyebrow-badge">הזמנת מופע</span>
-    <h1>מזמינים את געגע אליכם</h1>
+    <div class="marquee-lights"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <h1 class="circus-title"><span class="ct-line1">מזמינים את געגע אליכם</span></h1>
     <p class="lede">למלאו את הפרטים ונחזור אליכם בוואטסאפ לתיאום מלא.</p>
   </div>
   <div class="hero-bunting"></div>
@@ -118,6 +120,7 @@ document.getElementById("event-form").addEventListener("submit", async (e) => {
 
   msg.innerHTML = `הפנייה נשמרה בהצלחה! <a href="${buildWhatsAppLink(waText)}" target="_blank" style="text-decoration:underline; font-weight:700;">המשיכו לוואטסאפ לתיאום מהיר &larr;</a>`;
   msg.className = "form-message show success";
+  confettiBurst();
   form.reset();
   btn.disabled = false;
 });
